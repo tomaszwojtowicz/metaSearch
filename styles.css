@@ -1,0 +1,124 @@
+.form-control {
+    border-radius: 20px;
+}
+
+.btn {
+    border-radius: 6px 20px 20px 6px;
+    font-size: 1em;
+}
+
+.form-control:focus {
+    border-color: rgb(138, 194, 207, 0.6);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgb(138, 194, 207, 0.6);
+}
+
+.engine-choice {
+    align-content: stretch;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.card {
+    border: none;
+}
+
+.card-body {
+    padding: 0.7em;
+}
+
+.card-subtitle {
+    font-size: 0.85em;
+    color: rgb(42, 100, 42);
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+.card-title {
+    font-weight: 400;
+    font-size: 1.1em;
+    color: rgb(18, 27, 164);
+    cursor: pointer;
+}
+
+.card-text {
+    font-size: 0.85em;
+    color: rgb(106, 106, 106);
+}
+
+.card-footer {
+    background-color: white;
+    border: none;
+    font-size: 0.75em;
+    color: rgb(106, 106, 106);
+    padding: 0.3rem 0rem;
+}
+
+.card-footer span {
+    padding-right: 0.5rem;
+}
+
+#altavista-logo {
+    max-width: 300px;
+    align-self: center;
+    margin: 1em;
+}
+
+.loader {
+    margin: 100px auto auto auto;
+    border: 8px solid rgb(74, 160, 181);
+    border-top: 8px solid rgb(145, 55, 40);
+    /* Blue */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.pagination-page {
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+li.active {
+    background-color: #17a2b8;
+    border: none;
+    border-radius: 6px;
+}
+
+li.active a {
+    color: white;
+}
+
+.engine-disabled {
+    color: gray;
+    font-style: italic;
+}
+
+#no-results-dialog {
+    margin-top: 70px;
+}
+
+svg {
+    background: #FCFCFC;
+    border: 1px black solid;
+}
+
+#annotation {
+    display: fixed;
+    top: 20px;
+    left: 20px;
+    font-size: 16px;
+    font-weight: 900;
+}

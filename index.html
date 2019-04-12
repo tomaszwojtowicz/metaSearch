@@ -1,0 +1,113 @@
+<!doctype html>
+<html ng-app="coding_test">
+
+<head>
+    <title>Metasearch engine coding task</title>
+    <!--    AngularJS-->
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+
+    <!--    jQuery, because of AJAX and Bootstrap-->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.5/umd/popper.min.js"></script>
+
+    <!--    Boostrap, so I don't need to worry about styling/responsiveness-->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!--    UI Boostrap, used to handle pagination-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap-tpls.min.js" integrity="sha256-tyfWW2LtJQNI+l3F0h6xDV/ij6Mfn8lwSKHWOsmEgXM=" crossorigin="anonymous"></script>
+
+    <!--    Elasticlunr, will use it to rank pages-->
+    <script src="elasticlunr.js"></script>
+
+    <!--    D3.js, for data visalisation-->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+
+    <!--    Font Awesome, used only to get 'magnifying glass' icon-->
+    <link href='http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css' rel='stylesheet' type='text/css'>
+
+    <!--    Own CSS-->
+    <link href="styles.css" rel="stylesheet">
+
+    <!--    Own code-->
+    <script src="search2engines.js"></script>
+</head>
+
+
+<body ng-controller='s2e'>
+    <div class="container">
+
+        <div class="row d-flex justify-content-center">
+
+            <div class="col-xs-offset-3 col-md-offset-5">
+                <img id="altavista-logo" src="http://4.bp.blogspot.com/-s6zCft5cPHw/UdRQw6aQUWI/AAAAAAAAakk/dM96Qr2UK3E/s800/AltaVista+logo+2002.png">
+                <form ng-submit="search()">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="search-input" ng-model="searchTerm">
+                        <div class="input-group-append">
+                            <button class="btn btn-info fa fa-search fa-2x" type="button" id="search-button" ng-click="search()" ng-disabled="!getButtonState()"></button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="row d-flex justify-content-center">
+
+                    <div ng-repeat="engine in availableEngines" class="engine-choice">
+                        <input type="checkbox" name="engine.name" ng-model="engine.selected" ng-checked="engine.selected" ng-change="updateEngineStates()" ng-disabled="engine.disabled" />
+                        <label ng-class="engine.disabled ? 'engine-disabled': 'engine-enabled'">{{engine.name}}</label>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="list-group" ng-hide="rankedSearchResults.length == 0 || searching">
+
+            <div class="card" ng-repeat="result in rankedSearchResults.slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage))">
+                <div class="card-body">
+                    <div class="card-title" ng-click="openInNewWindow(result.doc)">{{result.doc.title}}</div>
+                    <div class="card-subtitle" ng-click="openInNewWindow(result.doc)">{{result.doc.url}}</div>
+                    <div class="card-text">{{result.doc.snippet}}</div>
+                    <div class="card-footer" ng-if="result.doc.visited"><span class="fa fa-check text-info"></span>You have visited this page at {{result.doc.visited.getHours()}}:{{result.doc.visited.getMinutes()}}</div>
+
+                </div>
+            </div>
+
+            <hr />
+
+            <div class="row">
+                <!--    Page selector, implemented using UI.Bootstrap-->
+                <div class="col-8">
+                    <ul uib-pagination total-items="totalItems" ng-model="currentPage" items-per-page="itemsPerPage" class="pagination-sm d-flex justify-content-center" previous-text="&laquo;" next-text="&raquo;"></ul>
+                </div>
+
+                <!--    Items per page selector-->
+                <div class="col-3 ml-auto">
+                    <select ng-model="itemsPerPage" ng-change="setItemsPerPage(itemsPerPage)">
+                        <option value="10" ng-selected="itemsPerPage == 10">10</option>
+                        <option value="25" ng-selected="itemsPerPage == 25">25</option>
+                        <option value="50" ng-selected="itemsPerPage == 50">50</option>
+                    </select> results per page
+                </div>
+            </div>
+        </div>
+
+        <div class="row d-flex justify-content-center align-middle" ng-show="noResults" id="no-results-dialog">
+            <div>
+                <p>Your search - <b>{{failedSearchTerm}}</b> - did not match any documents</p>
+                <p>Suggestions:</p>
+                <ul>
+                    <li>Make sure that all words are spelled correctly</li>
+                    <li>Try different keywords</li>
+                    <li>Try more general keywords</li>
+                    <li>Try different search engines</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="loader" ng-show="searching"></div>
+    </div>
+</body>
+
+</html>
